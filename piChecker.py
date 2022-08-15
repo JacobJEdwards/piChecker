@@ -1,4 +1,3 @@
-
 from telegram import *
 
 from telegram.ext import (
@@ -15,13 +14,11 @@ from gpiozero import CPUTemperature
 from time import sleep
 import redis
 
-
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-
 
 # setting some constants - particularly chat id so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
@@ -67,8 +64,11 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 
 
 async def awakened(context: CallbackContext) -> None:
-    await context.bot.delete_message(message_id=r.spop('reboot_message', 1))
-    await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
+    try:
+        await context.bot.edit_message_text(message_id=r.spop('reboot_message', 1), chat_id=CHAT_ID,
+                                            text='The pi is awake!')
+    except:
+        await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
     # to add it editing the previous message - temporarily store message id in redis ? replace each ime
 
 
