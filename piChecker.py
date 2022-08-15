@@ -11,7 +11,9 @@ from telegram.ext import (
     CallbackContext,
 )
 
+import subprocess
 from gpiozero import CPUTemperature
+from time import sleep
 
 
 # Enable logging
@@ -35,6 +37,12 @@ async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     if currentTemp > THRESHOLD_TEMP:
         await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}°C', chat_id=CHAT_ID)
+
+
+async def reboot(update: Update, context: CallbackContext) -> None:
+    await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID)
+    sleep(5)
+    subprocess.run(['sh', '/home/pi/Scripts/rebooter.sh'])
 
 
 async def checkTemp(update: Update, context: CallbackContext) -> None:
