@@ -72,6 +72,7 @@ def main() -> None:
 
     # a few handlers
     application.add_handler(CommandHandler('start', start))
+    application.add_handler(CommandHandler('reboot', reboot))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
     application.add_handler(MessageHandler(filters.ALL, unknownCommand))
 
