@@ -24,3 +24,9 @@ def main() -> None:
     application = Application.builder().token(***REMOVED***).build()
 
     application.add_handler(CommandHandler('start', start))
+
+    application.run_polling()
+
+
+if __name__ == '__main__':
+    main()
