@@ -42,12 +42,19 @@ async def checkTemp(update: Update, context: CallbackContext) -> None:
     await context.bot.send_message(text=f'Current Temperature: {currentTemp}C', chat_id=CHAT_ID)
 
 
+async def unknownCommand(update: Update, context: CallbackContext) -> None:
+    await update.message.reply_text('Unknown command')
+
+
 def main() -> None:
     application = Application.builder().token(***REMOVED***).build()
+
     job_queue = application.job_queue
     job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
+
     application.add_handler(CommandHandler('start', start))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
+    application.add_handler(MessageHandler(filters.ALL, unknownCommand))
 
     application.run_polling()
 
