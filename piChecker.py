@@ -63,6 +63,7 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('Unknown command')
 
 
+# calls this as soon as the pi turns on using job queue
 async def awakened(context: CallbackContext) -> None:
     try:
         message_id = str(r.spop('reboot_message', 1)[0]).replace('b', '').replace("'", "")
