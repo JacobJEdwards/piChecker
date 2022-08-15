@@ -1,7 +1,7 @@
 
 import logging
 
-from telegram import *
+from telegram import Update
 
 from telegram.ext import (
     Application,
@@ -34,12 +34,12 @@ async def start(update: Update, context: CallbackContext) -> None:
 async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     if currentTemp > THRESHOLD_TEMP:
-        await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}C', chat_id=CHAT_ID)
+        await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}°C', chat_id=CHAT_ID)
 
 
 async def checkTemp(update: Update, context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
-    await context.bot.send_message(text=f'Current Temperature: {currentTemp}C', chat_id=CHAT_ID)
+    await context.bot.send_message(text=f'Current Temperature: {currentTemp}°C', chat_id=CHAT_ID)
 
 
 async def unknownCommand(update: Update, context: CallbackContext) -> None:
