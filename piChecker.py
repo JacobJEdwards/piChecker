@@ -13,6 +13,7 @@ import logging
 import subprocess
 from gpiozero import CPUTemperature
 from time import sleep
+import redis
 
 
 # Enable logging
@@ -25,6 +26,8 @@ logger = logging.getLogger(__name__)
 # setting some constants - particularly chat id so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
 CHAT_ID = ***REMOVED***
+
+r = redis.Redis()
 
 
 # basic start function - creates the keyboard ect
@@ -46,7 +49,8 @@ async def autoCheckTemp(context: CallbackContext) -> None:
 # add a handler - possibly inline and command handled
 # need to create the script
 async def reboot(update: Update, context: CallbackContext) -> None:
-    await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID)
+    message_id = (await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID))["message_id"]
+    r.sadd('reboot_message', message_id)
     sleep(5)
     subprocess.run(['sh', '/home/pi/Scripts/rebooter.sh'])
 
@@ -63,7 +67,9 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 
 
 async def awakened(context: CallbackContext) -> None:
+    await context.bot.delete_message(message_id=r.spop('reboot_message', 1))
     await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
+    # to add it editing the previous message - temporarily store message id in redis ? replace each ime
 
 
 def main() -> None:
@@ -72,6 +78,7 @@ def main() -> None:
 
     # allows me to edit the job queue - ie tell the bot when to call a function
     job_queue = application.job_queue
+
     initial_job = job_queue.run_once(awakened, 5)
     job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
 
