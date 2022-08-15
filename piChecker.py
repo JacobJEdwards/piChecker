@@ -65,7 +65,7 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 
 async def awakened(context: CallbackContext) -> None:
     try:
-        await context.bot.edit_message_text(message_id=r.spop('reboot_message', 1), chat_id=CHAT_ID,
+        await context.bot.edit_message_text(message_id=r.spop('reboot_message', 1)[0], chat_id=CHAT_ID,
                                             text='The pi is awake!')
     except:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
