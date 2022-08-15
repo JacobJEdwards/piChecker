@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 THRESHOLD_TEMP = 60
 CHAT_ID = ***REMOVED***
 
+
 async def start(update: Update, context: CallbackContext) -> None:
     keyboard = [['Check Temperature']]
     menu_markup = ReplyKeyboardMarkup(keyboard)
@@ -33,12 +34,12 @@ async def start(update: Update, context: CallbackContext) -> None:
 async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     if currentTemp > THRESHOLD_TEMP:
-        await context.bot.send_message(chat_id=CHAT_ID, f'THRESHOLD TEMP EXCEEDED AT {currentTemp}C')
+        await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}C', chat_id=CHAT_ID)
 
 
 async def checkTemp(update: Update, context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
-    await context.bot.send_message(chat_id=CHAT_ID, f'Current Temperature: {currentTemp}C')
+    await context.bot.send_message(text=f'Current Temperature: {currentTemp}C', chat_id=CHAT_ID)
 
 
 def main() -> None:
