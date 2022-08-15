@@ -62,12 +62,17 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('Unknown command')
 
 
+async def awakened(context: CallbackContext) -> None:
+    await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
+
+
 def main() -> None:
     # create the bot
     application = Application.builder().token(***REMOVED***).build()
 
     # allows me to edit the job queue - ie tell the bot when to call a function
     job_queue = application.job_queue
+    initial_job = job_queue.run_once(awakened, 5)
     job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
 
     # a few handlers
