@@ -38,7 +38,7 @@ async def autoCheckTemp(context: CallbackContext) -> None:
 
 async def checkTemp(update: Update, context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
-    await context.bot.send_message(chat_id=CHAT_ID, f'Current Temperature: {currentTemp}C'
+    await context.bot.send_message(chat_id=CHAT_ID, f'Current Temperature: {currentTemp}C')
 
 
 def main() -> None:
