@@ -20,7 +20,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# setting some constants - particularly chat id so it only sends messages to me (hopefully!)
+# setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
 CHAT_ID = ***REMOVED***
 
@@ -34,7 +34,7 @@ async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('Hello!', reply_markup=menu_markup)
 
 
-# called very minute using the run_repeating job queue function - makes sure it isnt too hot
+# called very minute using the run_repeating job queue function - makes sure it isn't too hot
 # to add inline button to reboot if over 60
 async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
