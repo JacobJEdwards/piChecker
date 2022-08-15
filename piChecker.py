@@ -9,10 +9,9 @@ from telegram.ext import (
     MessageHandler,
     filters,
     CallbackContext,
-    CallbackQueryHandler,
-    ContextTypes,
-    PreCheckoutQueryHandler
 )
+
+from gpiozero import CPUTemperature
 
 
 # Enable logging
@@ -22,6 +21,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+THRESHOLD_TEMP = 60
+CHAT_ID = ***REMOVED***
+
 async def start(update: Update, context: CallbackContext) -> None:
     keyboard = [['Check Temperature']]
     menu_markup = ReplyKeyboardMarkup(keyboard)
@@ -29,12 +31,14 @@ async def start(update: Update, context: CallbackContext) -> None:
 
 
 async def autoCheckTemp(context: CallbackContext) -> None:
-    print('test')
+    currentTemp = CPUTemperature().temperature
+    if currentTemp > THRESHOLD_TEMP:
+        await context.bot.send_message(chat_id=CHAT_ID, f'THRESHOLD TEMP EXCEEDED AT {currentTemp}C')
 
 
 async def checkTemp(update: Update, context: CallbackContext) -> None:
-    print('test')
-
+    currentTemp = CPUTemperature().temperature
+    await context.bot.send_message(chat_id=CHAT_ID, f'Current Temperature: {currentTemp}C'
 
 
 def main() -> None:
