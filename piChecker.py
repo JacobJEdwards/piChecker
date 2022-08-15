@@ -1,3 +1,6 @@
+
+import logging
+
 from telegram import *
 
 from telegram.ext import (
@@ -11,19 +14,35 @@ from telegram.ext import (
     PreCheckoutQueryHandler
 )
 
-CHAT_ID =
-USER_ID =
 
-def start(update: Update, context: CallbackContext) -> None:
-    print(update.effective_user.id)
-    print(update.effective_chat.id)
-def checkTemp(update: Update, context: CallbackContext) -> None:
+# Enable logging
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+
+async def start(update: Update, context: CallbackContext) -> None:
+    keyboard = [['Check Temperature']]
+    menu_markup = ReplyKeyboardMarkup(keyboard)
+    await update.message.reply_text('Hello!', reply_markup=menu_markup)
+
+
+async def autoCheckTemp(context: CallbackContext) -> None:
+    print('test')
+
+
+async def checkTemp(update: Update, context: CallbackContext) -> None:
+    print('test')
+
 
 
 def main() -> None:
     application = Application.builder().token(***REMOVED***).build()
-
+    job_queue = application.job_queue
+    job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
     application.add_handler(CommandHandler('start', start))
+    application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
 
     application.run_polling()
 
