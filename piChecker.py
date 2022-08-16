@@ -89,7 +89,8 @@ async def awakened(context: CallbackContext) -> None:
 
 @restricted
 async def commandLine(update: Update, context: CallbackContext) -> None:
-    pass
+    temp = context.args
+    print(temp)
     # to be able to run shell commands
     # take user message, split at whitespace into array, pass into subprocess func
 
@@ -107,6 +108,7 @@ def main() -> None:
     # a few handlers
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('reboot', reboot))
+    application.add_handler(CommandHandler('run', commandLine))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
     application.add_handler(MessageHandler(filters.ALL, unknownCommand))
 
