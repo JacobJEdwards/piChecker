@@ -85,7 +85,6 @@ async def awakened(context: CallbackContext) -> None:
                                             text='Successfully rebooted!')
     except:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
-    # to add it editing the previous message - temporarily store message id in redis ? replace each ime
 
 
 @restricted
