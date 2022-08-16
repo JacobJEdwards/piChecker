@@ -90,8 +90,8 @@ async def awakened(context: CallbackContext) -> None:
 @restricted
 async def commandLine(update: Update, context: CallbackContext) -> None:
     commandArray = context.args
-    output = subprocess.run(commandArray, capture_output=True)
-    await update.message.reply_text(output)
+    output = subprocess.run(commandArray, capture_output=True).stdout.decode('UTF-8')
+    print(output)
 
 
 def main() -> None:
