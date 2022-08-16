@@ -1,3 +1,7 @@
+# †ø∂ø
+# Finish command line
+# i am not sure what else whatever i can think of...
+
 from telegram import *
 
 from telegram.ext import (
@@ -22,6 +26,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
@@ -50,7 +55,6 @@ async def start(update: Update, context: CallbackContext) -> None:
 
 
 # called very minute using the run_repeating job queue function - makes sure it isn't too hot
-# to add inline button to reboot if over 60
 async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     if currentTemp > THRESHOLD_TEMP:
