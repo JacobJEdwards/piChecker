@@ -29,6 +29,15 @@ r = redis.Redis()
 
 
 # function to define who can use certain commands
+def restricted(func):
+    @wraps(func)
+    async def wrapped(update, context, *args, **kwargs):
+        user_id = update.effective_user.id
+        if user_id != CHAT_ID:
+            await context.bot.send_message(text=f"Unauthorized access denied for {user_id}.", chat_id=CHAT_ID)
+            return
+        return await func(update, context, *args, **kwargs)
+    return wrapped
 
 
 # basic start function - creates the keyboard ect
@@ -49,6 +58,7 @@ async def autoCheckTemp(context: CallbackContext) -> None:
 # allows me to reboot the bot
 # add a handler - possibly inline and command handled
 # need to create the script
+@restricted
 async def reboot(update: Update, context: CallbackContext) -> None:
     message_id = (await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID))["message_id"]
     r.sadd('reboot_message', message_id)
@@ -77,6 +87,7 @@ async def awakened(context: CallbackContext) -> None:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
 
 
+@restricted
 async def commandLine(update: Update, context: CallbackContext) -> None:
     pass
     # to be able to run shell commands
