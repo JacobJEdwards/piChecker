@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
-THRESHOLD_TEMP = 60
+THRESHOLD_TEMP = 45
 CHAT_ID = ***REMOVED***
 
 r = redis.Redis()
