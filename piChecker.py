@@ -23,8 +23,7 @@ logger = logging.getLogger(__name__)
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
-CHAT_ID = 525399664
-
+CHAT_ID = ***REMOVED***
 
 r = redis.Redis()
 
@@ -35,7 +34,7 @@ def restricted(func):
     async def wrapped(update, context, *args, **kwargs):
         user_id = update.effective_user.id
         if user_id != CHAT_ID:
-            await update.effective_user.reply_text(f"Unauthorized access denied for {user_id}.")
+            print(f"Unauthorized access denied for {user_id}.")
             return
         return await func(update, context, *args, **kwargs)
     return wrapped
