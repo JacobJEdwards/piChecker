@@ -66,7 +66,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
 
     await query.answer()
-    if query.data is '1':
+    if query.data == '1':
         await query.edit_message_text(text="Starting reboot")
         await reboot(update, context)
     else:
