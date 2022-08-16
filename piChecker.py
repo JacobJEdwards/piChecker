@@ -7,6 +7,7 @@ from telegram.ext import (
     filters,
     CallbackContext,
     ContextTypes,
+    CallbackQueryHandler,
 )
 
 from functools import wraps
@@ -23,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
-THRESHOLD_TEMP = 45
+THRESHOLD_TEMP = 60
 CHAT_ID = ***REMOVED***
 
 r = redis.Redis()
@@ -64,7 +65,7 @@ async def autoCheckTemp(context: CallbackContext) -> None:
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
-
+    print(query.data)
     await query.answer()
     if query.data == '1':
         await query.edit_message_text(text="Starting reboot")
@@ -127,6 +128,7 @@ def main() -> None:
     application.add_handler(CommandHandler('reboot', reboot))
     application.add_handler(CommandHandler('run', commandLine))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
+    application.add_handler(CallbackQueryHandler(button))
     application.add_handler(MessageHandler(filters.ALL, unknownCommand))
 
     # runs the bot
