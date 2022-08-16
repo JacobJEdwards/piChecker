@@ -89,10 +89,10 @@ async def awakened(context: CallbackContext) -> None:
 
 @restricted
 async def commandLine(update: Update, context: CallbackContext) -> None:
-    temp = context.args
-    print(temp)
-    # to be able to run shell commands
-    # take user message, split at whitespace into array, pass into subprocess func
+    commandArray = context.args
+    output = subprocess.run(commandArray, capture_output=True)
+    await update.message.reply_text(output)
+
 
 
 def main() -> None:
