@@ -8,6 +8,7 @@ from telegram.ext import (
     CallbackContext,
 )
 
+from functools import wraps
 import logging
 import subprocess
 from gpiozero import CPUTemperature
@@ -22,9 +23,22 @@ logger = logging.getLogger(__name__)
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
-CHAT_ID = ***REMOVED***
+CHAT_ID = 525399664
+
 
 r = redis.Redis()
+
+
+# function to define who can use certain commands
+def restricted(func):
+    @wraps(func)
+    async def wrapped(update, context, *args, **kwargs):
+        user_id = update.effective_user.id
+        if user_id != CHAT_ID:
+            await update.effective_user.reply_text(f"Unauthorized access denied for {user_id}.")
+            return
+        return await func(update, context, *args, **kwargs)
+    return wrapped
 
 
 # basic start function - creates the keyboard ect
@@ -45,6 +59,7 @@ async def autoCheckTemp(context: CallbackContext) -> None:
 # allows me to reboot the bot
 # add a handler - possibly inline and command handled
 # need to create the script
+@restricted
 async def reboot(update: Update, context: CallbackContext) -> None:
     message_id = (await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID))["message_id"]
     r.sadd('reboot_message', message_id)
@@ -72,6 +87,13 @@ async def awakened(context: CallbackContext) -> None:
     except:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
     # to add it editing the previous message - temporarily store message id in redis ? replace each ime
+
+
+@restricted
+async def commandLine(update: Update, context: CallbackContext) -> None:
+    pass
+    # to be able to run shell commands
+    # take user message, split at whitespace into array, pass into subprocess func
 
 
 def main() -> None:
