@@ -6,6 +6,7 @@ from telegram.ext import (
     MessageHandler,
     filters,
     CallbackContext,
+    ContextTypes,
 )
 
 from functools import wraps
@@ -52,7 +53,24 @@ async def start(update: Update, context: CallbackContext) -> None:
 async def autoCheckTemp(context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     if currentTemp > THRESHOLD_TEMP:
-        await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}°C', chat_id=CHAT_ID)
+        inlineKeyboard = [
+            [InlineKeyboardButton('Reboot', callback_data='1')],
+            [InlineKeyboardButton('Do nothing', callback_data='2')]
+        ]
+        reply_markup = InlineKeyboardMarkup(inlineKeyboard)
+        await context.bot.send_message(text=f'THRESHOLD TEMP EXCEEDED AT {currentTemp}°C',
+                                       chat_id=CHAT_ID, reply_markup=reply_markup)
+
+
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+
+    await query.answer()
+    if query.data is '1':
+        await query.edit_message_text(text="Starting reboot")
+        await reboot(update, context)
+    else:
+        await query.edit_message_text(text='OK')
 
 
 # allows me to reboot the bot
