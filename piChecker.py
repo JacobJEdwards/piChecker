@@ -94,7 +94,6 @@ async def commandLine(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(output)
 
 
-
 def main() -> None:
     # create the bot
     application = Application.builder().token(***REMOVED***).build()
