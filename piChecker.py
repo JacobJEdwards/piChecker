@@ -114,7 +114,7 @@ async def awakened(context: CallbackContext) -> None:
 async def commandLine(update: Update, context: CallbackContext) -> None:
     commandArray = context.args
     output = subprocess.run(commandArray, capture_output=True).stdout.decode('UTF-8')
-    print(output)
+    await context.bot.send_message(text=output, chat_id=CHAT_ID)
 
 
 def main() -> None:
