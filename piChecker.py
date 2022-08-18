@@ -51,7 +51,7 @@ def restricted(func):
 async def start(update: Update, context: CallbackContext) -> None:
     keyboard = [['Check Temperature']]
     menu_markup = ReplyKeyboardMarkup(keyboard)
-    await update.message.reply_text('Hello!', reply_markup=menu_markup)
+    await update.message.reply_text('Hello!!!', reply_markup=menu_markup)
 
 
 # called very minute using the run_repeating job queue function - makes sure it isn't too hot
