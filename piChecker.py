@@ -94,6 +94,7 @@ async def checkTemp(update: Update, context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     await context.bot.send_message(text=f'Current Temperature: {currentTemp}°C', chat_id=CHAT_ID)
 
+
 async def memInfo(update: Update, context: CallbackContext) -> None:
     output = subprocess.run(['sh', '/home/pi/Scripts/memoryInfo.sh'], capture_output=True).stdout.decode()
     await context.bot.send_message(text=output, chat_id=CHAT_ID)
@@ -106,11 +107,12 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 
 # calls this as soon as the pi turns on using job queue
 async def awakened(context: CallbackContext) -> None:
-    message_id = r.spop('reboot_message', 1)[0].decode()
-    await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
-                                            text='Successfully rebooted!')
-
-    await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
+    try:
+        message_id = r.spop('reboot_message', 1)[0].decode()
+        await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
+                                            text='Successfully rebooted!\n\nThe pi is awake!')
+    except:
+        await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
 
 
 @restricted
