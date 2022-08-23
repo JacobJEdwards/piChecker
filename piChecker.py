@@ -49,7 +49,7 @@ def restricted(func):
 
 # basic start function - creates the keyboard ect
 async def start(update: Update, context: CallbackContext) -> None:
-    keyboard = [['Check Temperature']]
+    keyboard = [['Check Temperature'],['Memory Info']]
     menu_markup = ReplyKeyboardMarkup(keyboard)
     await update.message.reply_text('Hello!!!', reply_markup=menu_markup)
 
@@ -94,6 +94,10 @@ async def checkTemp(update: Update, context: CallbackContext) -> None:
     currentTemp = CPUTemperature().temperature
     await context.bot.send_message(text=f'Current Temperature: {currentTemp}°C', chat_id=CHAT_ID)
 
+async def memInfo(update: Update, context: CallbackContext) -> None:
+    output = subprocess.run(['sh', '/home/pi/Scripts/memoryInfo.sh'], capture_output=True).stdout.decode()
+    await context.bot.send_message(text=output, chat_id=CHAT_ID)
+
 
 # in case an unrecognized message is sent
 async def unknownCommand(update: Update, context: CallbackContext) -> None:
@@ -102,12 +106,11 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 
 # calls this as soon as the pi turns on using job queue
 async def awakened(context: CallbackContext) -> None:
-    try:
-        message_id = str(r.spop('reboot_message', 1)[0]).replace('b', '').replace("'", "")
-        await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
+    message_id = r.spop('reboot_message', 1)[0].decode()
+    await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
                                             text='Successfully rebooted!')
-    except:
-        await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
+
+    await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
 
 
 @restricted
@@ -131,8 +134,12 @@ def main() -> None:
     # a few handlers
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('reboot', reboot))
+    application.add_handler(CommandHandler('meminfo', memInfo))
     application.add_handler(CommandHandler('run', commandLine))
+
+    application.add_handler(MessageHandler(filters.Regex('Memory Info'), memInfo))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
+
     application.add_handler(CallbackQueryHandler(button))
     application.add_handler(MessageHandler(filters.ALL, unknownCommand))
 
