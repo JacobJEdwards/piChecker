@@ -109,6 +109,7 @@ async def unknownCommand(update: Update, context: CallbackContext) -> None:
 async def awakened(context: CallbackContext) -> None:
     try:
         message_id = r.spop('reboot_message', 1)[0].decode()
+        print(message_id)
         await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
                                             text='Successfully rebooted!\n\nThe pi is awake!')
     except:
@@ -119,7 +120,7 @@ async def awakened(context: CallbackContext) -> None:
 async def commandLine(update: Update, context: CallbackContext) -> None:
     commandArray = context.args
     commandString = ' '.join(commandArray)
-    output = subprocess.run(commandString, capture_output=True, shell=True).stdout.decode('UTF-8')
+    output = subprocess.run(commandString, capture_output=True, shell=True).stdout.decode()
     await context.bot.send_message(text=output, chat_id=CHAT_ID)
 
 
