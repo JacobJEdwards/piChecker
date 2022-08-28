@@ -111,7 +111,7 @@ async def awakened(context: CallbackContext) -> None:
         print(message_id)
         await context.bot.edit_message_text(message_id=int(message_id), chat_id=CHAT_ID,
                                             text='Successfully rebooted!\n\nThe pi is awake!')
-    except:
+    except IndexError:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
 
 
