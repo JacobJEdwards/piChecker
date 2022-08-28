@@ -79,8 +79,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 # allows me to reboot the bot
-# add a handler - possibly inline and command handled
-# need to create the script
 @restricted
 async def reboot(update: Update, context: CallbackContext) -> None:
     message_id = (await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID))["message_id"]
@@ -95,6 +93,7 @@ async def checkTemp(update: Update, context: CallbackContext) -> None:
     await context.bot.send_message(text=f'Current Temperature: {currentTemp}°C', chat_id=CHAT_ID)
 
 
+# allows the pi's memory info to be checked - need to prettify
 async def memInfo(update: Update, context: CallbackContext) -> None:
     output = subprocess.run(['sh', '/home/pi/Scripts/memoryInfo.sh'], capture_output=True).stdout.decode()
     await context.bot.send_message(text=output, chat_id=CHAT_ID)
@@ -131,7 +130,8 @@ def main() -> None:
     # allows me to edit the job queue - ie tell the bot when to call a function
     job_queue = application.job_queue
 
-    initial_job = job_queue.run_once(awakened, 0)
+    # adds one job to queue immediately, and one once a minute
+    initial_job = job_queue.run_once(awakened, 3)
     job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
 
     # a few handlers
