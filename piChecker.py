@@ -2,10 +2,15 @@
 # Finish command line
 # i am not sure what else whatever i can think of...
 
-from telegram import *
+from telegram import (
+    Update,
+    ReplyKeyboardMarkup,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton
+)
 
 from telegram.ext import (
-    Application,
+    ApplicationBuilder,
     CommandHandler,
     MessageHandler,
     filters,
@@ -49,7 +54,7 @@ def restricted(func):
 
 # basic start function - creates the keyboard ect
 async def start(update: Update, context: CallbackContext) -> None:
-    keyboard = [['Check Temperature'],['Memory Info']]
+    keyboard = [['Check Temperature'], ['Memory Info']]
     menu_markup = ReplyKeyboardMarkup(keyboard)
     await update.message.reply_text('Hello!!!', reply_markup=menu_markup)
 
@@ -125,7 +130,7 @@ async def commandLine(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     # create the bot
-    application = Application.builder().token(***REMOVED***).build()
+    application = ApplicationBuilder().token(***REMOVED***).build()
 
     # allows me to edit the job queue - ie tell the bot when to call a function
     job_queue = application.job_queue
