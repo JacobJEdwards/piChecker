@@ -91,8 +91,7 @@ async def reboot(update: Update, context: CallbackContext) -> None:
     message_id = (await context.bot.send_message(text='Rebooting...', chat_id=CHAT_ID))["message_id"]
     r.sadd('reboot_message', message_id)
     sleep(5)
-    subprocess.run(['sh', '/home/pi/Scripts/rebooter.sh'])
-
+    subprocess.run(['sudo', 'reboot'])
 
 # allows manual checking of cpu temperature
 async def checkTemp(update: Update, context: CallbackContext) -> None:
