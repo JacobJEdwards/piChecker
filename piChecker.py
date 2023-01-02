@@ -1,6 +1,8 @@
 # †ø∂ø
 # Finish command line
 # i am not sure what else whatever i can think of...
+# git pull from repos
+from gitPull import gitPull, pipInstall
 
 from telegram import (
     Update,
@@ -120,6 +122,18 @@ async def awakened(context: CallbackContext) -> None:
         await context.bot.send_message(text='The pi is awake!', chat_id=CHAT_ID)
 
 
+async def pull(update: Update, context: CallbackContext):
+    await context.bot.send_message(text='Pulling from git...', chat_id=CHAT_ID)
+    gitPull()
+    await context.bot.send_message(text='Successfully pulled from git', chat_id=CHAT_ID)
+
+
+async def pip(update: Update, context: CallbackContext):
+    await context.bot.send_message(text='Installing pip packages...', chat_id=CHAT_ID)
+    pipInstall()
+    await context.bot.send_message(text='Successfully installed pip packages', chat_id=CHAT_ID)
+
+
 @restricted
 async def commandLine(update: Update, context: CallbackContext) -> None:
     commandArray = context.args
@@ -144,6 +158,8 @@ def main() -> None:
     application.add_handler(CommandHandler('reboot', reboot))
     application.add_handler(CommandHandler('meminfo', memInfo))
     application.add_handler(CommandHandler('run', commandLine))
+    application.add_handler(CommandHandler('pull', pull))
+    application.add_handler(CommandHandler('pip', pip))
 
     application.add_handler(MessageHandler(filters.Regex('Memory Info'), memInfo))
     application.add_handler(MessageHandler(filters.Regex('Check Temperature'), checkTemp))
