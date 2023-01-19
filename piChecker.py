@@ -1,7 +1,6 @@
 # †ø∂ø
 # Finish command line
 # i am not sure what else whatever i can think of...
-# git pull from repos
 from gitPull import gitPull, pipInstall
 
 from telegram import (
@@ -27,6 +26,14 @@ import subprocess
 from gpiozero import CPUTemperature
 from time import sleep
 import redis
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+CHAT_ID = os.getenv("CHAT_ID", "")
+BOT_API_TOKEN = os.getenv("BOT_API_TOKEN", "")
 
 # Enable logging
 logging.basicConfig(
@@ -37,7 +44,6 @@ logger = logging.getLogger(__name__)
 
 # setting some constants - particularly chat id, so it only sends messages to me (hopefully!)
 THRESHOLD_TEMP = 60
-CHAT_ID = ***REMOVED***
 
 r = redis.Redis()
 
@@ -143,7 +149,7 @@ async def commandLine(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     # create the bot
-    application = ApplicationBuilder().token(***REMOVED***).build()
+    application = ApplicationBuilder().token(BOT_API_TOKEN).build()
 
     # allows me to edit the job queue - ie tell the bot when to call a function
     job_queue = application.job_queue
