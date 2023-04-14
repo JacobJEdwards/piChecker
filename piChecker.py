@@ -175,8 +175,8 @@ def main() -> None:
     job_queue = application.job_queue
 
     # adds one job to queue immediately, and one once a minute
-    initial_job = job_queue.run_once(awakened, 3)
-    job_minute = job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
+    job_queue.run_once(awakened, 3)
+    job_queue.run_repeating(autoCheckTemp, interval=60, first=10)
 
     # a few handlers
     application.add_handler(CommandHandler("start", start))
